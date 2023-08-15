@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Fairing{
+  id              Int         @id @default(autoincrement())
+  reused          Boolean
+  ecovery_attempt Boolean
+  recovered       Boolean
+  ships           String[]
+
+  launch Launch @relation(fields: [launch_id], references: [id])
+
+  @@map("fairing")
+  launch_id Int
+}
+
+model PatchLinks {
+  id              Int         @id @default(autoincrement())
+  small           String
+  large           String
+
+  links Links @relation(fields: [links_id], references: [id])
+
+  @@map("patchLinks")
+  links_id Int
+}
+
+model RedditLinks {
+  id              Int         @id @default(autoincrement())
+  campaign        String?
+  launch          String?
+  media           String?
+  recovery        String?
+
+  links Links @relation(fields: [links_id], references: [id])
+
+  @@map("redditLinks")
+  links_id Int
+}
+
+model FlickrLinks {
+  id              Int         @id @default(autoincrement())
+  small           String[]
+  original        String[]
+
+  links Links @relation(fields: [links_id], references: [id])
+
+  @@map("flickrLinks")
+  links_id Int
+}
+
+model Links {
+  id              Int         @id @default(autoincrement())
+
+  patchLinks PatchLinks[]
+  redditLinks RedditLinks[]
+  flickrLinks FlickrLinks[]
+
+  presskit        String?
+  webcast         String?
+  youtubeId       String?
+  article         String?
+  wikipedia       String?
+
+  launch Launch @relation(fields: [launch_id], references: [id])
+
+  @@map("links")
+  launch_id Int
+}
+
+model Failure {
+  id              Int         @id @default(autoincrement())
+  time            Int
+  altitude        Int
+  reason          String
+
+  launch Launch @relation(fields: [launch_id], references: [id])
+
+  @@map("failure")
+  launch_id Int
+}
+
+model Cores {
+  id              Int      @id @default(autoincrement())
+  core            String
+  flight          Int
+  gridfins        Boolean
+  legs            Boolean
+  reused          Boolean
+  landingAttempt  Boolean
+  landingSuccess  Boolean?
+  landingType     String?
+  landpad         String?
+
+  launch Launch @relation(fields: [launch_id], references: [id])
+
+  @@map("cores")
+  launch_id Int
+}
+
+model Launch {
+  id                Int        @id @default(autoincrement())
+
+  fairings          Fairing[]
+  links             Links[]
+
+  staticFireDateUtc DateTime?
+  staticFireDateUnix Int?
+  net               Boolean
+  window            Int
+  rocket            String
+  success           Boolean
+
+  failures          Failure[]
+
+  details           String?
+  crew              String[]
+  ships             String[]
+  capsules          String[]
+  payloads          String[]
+  launchpad         String
+  flightNumber      Int
+  name              String
+  dateUtc           DateTime
+  dateUnix          Int
+  dateLocal         DateTime
+  datePrecision     String
+  upcoming          Boolean
+
+  cores             Cores[]
+
+  autoUpdate        Boolean
+  tbd               Boolean
+  launchLibraryId   String?
+
+  @@map("launch")
+}
