@@ -32,12 +32,12 @@ interface FlickrLinks {
 }
 
 interface Links {
-    patchLinks: PatchLinks[];
-    redditLinks: RedditLinks[];
-    flickrLinks: FlickrLinks[];
+    patch_links: PatchLinks[];
+    reddit_links: RedditLinks[];
+    flickr_links: FlickrLinks[];
     presskit?: string;
     webcast?: string;
-    youtubeId?: string;
+    youtube_id?: string;
     article?: string;
     wikipedia?: string;
     launch_id: number;
@@ -56,9 +56,9 @@ export interface Cores {
     gridfins: boolean;
     legs: boolean;
     reused: boolean;
-    landingAttempt: boolean;
-    landingSuccess?: boolean;
-    landingType?: string;
+    landing_attempt: boolean;
+    landing_success?: boolean;
+    landing_type?: string;
     landpad?: string;
     launch_id: number;
 }
@@ -67,8 +67,8 @@ export interface Launch {
     id: number;
     fairings: Fairing[];
     links: Links[];
-    staticFireDateUtc?: Date | string;
-    staticFireDateUnix?: number;
+    static_fire_date_utc?: Date | string;
+    static_fire_date_unix?: number;
     net: boolean;
     window: number;
     rocket: string;
@@ -80,17 +80,17 @@ export interface Launch {
     capsules: string[];
     payloads: string[];
     launchpad: string;
-    flightNumber: number;
+    flight_number: number;
     name: string;
-    dateUtc: string;
-    dateUnix: number;
-    dateLocal: string;
-    datePrecision: string;
+    date_utc: string;
+    date_unix: number;
+    date_local: string;
+    date_precision: string;
     upcoming: boolean;
     cores: Cores[];
-    autoUpdate: boolean;
+    auto_update: boolean;
     tbd: boolean;
-    launchLibraryId?: string;
+    launch_library_id?: string;
 }
 
 export interface DadosRequest {
@@ -106,46 +106,49 @@ export interface DadosRequest {
     };
 }
 
-async function PopularBanco(req: Request, res: Response, next: NextFunction) {
+const PopularBanco = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const response = await axios.get('https://api.spacexdata.com/v5/launches');
-        const responseData = response.data as Launch;
-
-        //console.log(responseData[0]); 
-        
-        const launch = {
-            id: responseData[0]?.id,
-            staticFireDateUtc: responseData[0]?.static_fire_date_utc,
-            staticFireDateUnix: responseData[0]?.static_fire_date_unix,
-            net: responseData[0]?.net,
-            window: responseData[0]?.window,
-            rocket: responseData[0]?.rocket,
-            success: responseData[0]?.success,
-            details: responseData[0]?.details,
-            crew: responseData[0]?.crew,
-            ships: responseData[0]?.ships,
-            capsules: responseData[0]?.capsules,
-            payloads: responseData[0]?.payloads,
-            launchpad: responseData[0]?.launchpad,
-            flightNumber: responseData[0]?.flight_number,
-            name: responseData[0]?.name,
-            dateUtc: responseData[0]?.date_utc,
-            dateUnix: responseData[0]?.date_unix,
-            dateLocal: responseData[0]?.date_local,
-            datePrecision: responseData[0]?.date_precision,
-            upcoming: responseData[0]?.upcoming,
-            autoUpdate: responseData[0]?.auto_update,
-            tbd: responseData[0]?.static_fire_date_utc,
-            launchLibraryId: responseData[0]?.launch_library_id,
+      const response = await axios.get('https://api.spacexdata.com/v5/launches');
+      const responseData = response.data as Launch[];
+  
+      if (responseData.length > 0) {
+        for (const launchData of responseData) {
+          const launch = {
+            id: launchData.id,
+            static_fire_date_utc: launchData.static_fire_date_utc,
+            static_fire_date_unix: launchData.static_fire_date_unix,
+            net: launchData?.net,
+            window: launchData?.window,
+            rocket: launchData?.rocket,
+            success: launchData?.success,
+            details: launchData?.details,
+            crew: launchData?.crew,
+            ships: launchData?.ships,
+            capsules: launchData?.capsules,
+            payloads: launchData?.payloads,
+            launchpad: launchData?.launchpad,
+            flight_number: launchData?.flight_number,
+            name: launchData?.name,
+            date_utc: launchData?.date_utc,
+            date_unix: launchData?.date_unix,
+            date_local: launchData?.date_local,
+            date_precision: launchData?.date_precision,
+            upcoming: launchData?.upcoming,
+            auto_update: launchData?.auto_update,
+            tbd: launchData?.tbd,
+            launch_library_id: launchData?.launch_library_id,
+          };
+  
+          console.log(launch);
         }
-
-        console.log(launch);
-
-        
-        return res.status(200).json({ message: "Database populated successfully" });
+  
+        return res.status(200).json({ message: 'Database populated successfully' });
+      } else {
+        console.log('Nenhum dado de lançamento encontrado.');
+      }
     } catch (err) {
-        return res.status(401).end();
+      return res.status(401).end();
     }
-}
+  };
 
 export { PopularBanco };
