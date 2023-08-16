@@ -1,4 +1,4 @@
-import { Response, Request } from "express";
+import { Response, Request, NextFunction } from "express";
 import prismaClient from "../prisma";
 
 const axios = require('axios');
@@ -67,7 +67,7 @@ export interface Launch {
     id: number;
     fairings: Fairing[];
     links: Links[];
-    staticFireDateUtc?: Date;
+    staticFireDateUtc?: Date | string;
     staticFireDateUnix?: number;
     net: boolean;
     window: number;
@@ -82,9 +82,9 @@ export interface Launch {
     launchpad: string;
     flightNumber: number;
     name: string;
-    dateUtc: Date;
+    dateUtc: string;
     dateUnix: number;
-    dateLocal: Date;
+    dateLocal: string;
     datePrecision: string;
     upcoming: boolean;
     cores: Cores[];
@@ -106,61 +106,46 @@ export interface DadosRequest {
     };
 }
 
-async function PopularBanco(req: Request, res: Response, dados: DadosRequest) {
+async function PopularBanco(req: Request, res: Response, next: NextFunction) {
     try {
         const response = await axios.get('https://api.spacexdata.com/v5/launches');
-        const dados = response.data as DadosRequest;
+        const responseData = response.data as Launch;
 
-            const fairingData = dados.dados.fairings;
-            const patchLinksData = dados.dados.links;
-            const redditLinksData = dados.dados.links; 
-            const flickrLinksData = dados.dados.links; 
-            const linksData = dados.dados.links;
-            const failuresData = dados.dados.failures;
-            const coresData = dados.dados.cores;
-            const launchData = dados.dados;
-
-            await prismaClient.launch.create({
-                data: launchData,
-            });
-
-            
-            
-        }catch(err) {
-
+        //console.log(responseData[0]); 
+        
+        const launch = {
+            id: responseData[0]?.id,
+            staticFireDateUtc: responseData[0]?.static_fire_date_utc,
+            staticFireDateUnix: responseData[0]?.static_fire_date_unix,
+            net: responseData[0]?.net,
+            window: responseData[0]?.window,
+            rocket: responseData[0]?.rocket,
+            success: responseData[0]?.success,
+            details: responseData[0]?.details,
+            crew: responseData[0]?.crew,
+            ships: responseData[0]?.ships,
+            capsules: responseData[0]?.capsules,
+            payloads: responseData[0]?.payloads,
+            launchpad: responseData[0]?.launchpad,
+            flightNumber: responseData[0]?.flight_number,
+            name: responseData[0]?.name,
+            dateUtc: responseData[0]?.date_utc,
+            dateUnix: responseData[0]?.date_unix,
+            dateLocal: responseData[0]?.date_local,
+            datePrecision: responseData[0]?.date_precision,
+            upcoming: responseData[0]?.upcoming,
+            autoUpdate: responseData[0]?.auto_update,
+            tbd: responseData[0]?.static_fire_date_utc,
+            launchLibraryId: responseData[0]?.launch_library_id,
         }
 
+        console.log(launch);
+
+        
+        return res.status(200).json({ message: "Database populated successfully" });
+    } catch (err) {
+        return res.status(401).end();
+    }
 }
 
 export { PopularBanco };
-
-
-/*
-            await prismaClient.links.create({
-                data: linksData,
-            });
-
-            await prismaClient.cores.create({
-                data: coresData,
-            });
-
-            await prismaClient.fairing.create({
-                data: fairingData,
-            });
-
-             await prismaClient.patchLinks.create({
-                data: patchLinksData,
-            });
-
-            await prismaClient.redditLinks.create({
-                data: redditLinksData,
-            });
-
-            await prismaClient.flickrLinks.create({
-                data: flickrLinksData,
-            });
-
-            await prismaClient.failure.create({
-                data: failuresData,
-            });
-            */

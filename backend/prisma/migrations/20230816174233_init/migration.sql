@@ -1,9 +1,9 @@
 -- CreateTable
 CREATE TABLE "fairing" (
     "id" SERIAL NOT NULL,
-    "reused" BOOLEAN NOT NULL,
-    "ecovery_attempt" BOOLEAN NOT NULL,
-    "recovered" BOOLEAN NOT NULL,
+    "reused" BOOLEAN,
+    "ecovery_attempt" BOOLEAN,
+    "recovered" BOOLEAN,
     "ships" TEXT[],
     "launch_id" INTEGER NOT NULL,
 
@@ -13,8 +13,8 @@ CREATE TABLE "fairing" (
 -- CreateTable
 CREATE TABLE "patchLinks" (
     "id" SERIAL NOT NULL,
-    "small" TEXT NOT NULL,
-    "large" TEXT NOT NULL,
+    "small" TEXT,
+    "large" TEXT,
     "links_id" INTEGER NOT NULL,
 
     CONSTRAINT "patchLinks_pkey" PRIMARY KEY ("id")
@@ -58,9 +58,9 @@ CREATE TABLE "links" (
 -- CreateTable
 CREATE TABLE "failure" (
     "id" SERIAL NOT NULL,
-    "time" INTEGER NOT NULL,
-    "altitude" INTEGER NOT NULL,
-    "reason" TEXT NOT NULL,
+    "time" INTEGER,
+    "altitude" INTEGER,
+    "reason" TEXT,
     "launch_id" INTEGER NOT NULL,
 
     CONSTRAINT "failure_pkey" PRIMARY KEY ("id")
@@ -69,12 +69,12 @@ CREATE TABLE "failure" (
 -- CreateTable
 CREATE TABLE "cores" (
     "id" SERIAL NOT NULL,
-    "core" TEXT NOT NULL,
-    "flight" INTEGER NOT NULL,
-    "gridfins" BOOLEAN NOT NULL,
-    "legs" BOOLEAN NOT NULL,
-    "reused" BOOLEAN NOT NULL,
-    "landingAttempt" BOOLEAN NOT NULL,
+    "core" TEXT,
+    "flight" INTEGER,
+    "gridfins" BOOLEAN,
+    "legs" BOOLEAN,
+    "reused" BOOLEAN,
+    "landingAttempt" BOOLEAN,
     "landingSuccess" BOOLEAN,
     "landingType" TEXT,
     "landpad" TEXT,
@@ -85,28 +85,28 @@ CREATE TABLE "cores" (
 
 -- CreateTable
 CREATE TABLE "launch" (
-    "id" SERIAL NOT NULL,
+    "id" INTEGER NOT NULL,
     "staticFireDateUtc" TIMESTAMP(3),
     "staticFireDateUnix" INTEGER,
-    "net" BOOLEAN NOT NULL,
-    "window" INTEGER NOT NULL,
-    "rocket" TEXT NOT NULL,
-    "success" BOOLEAN NOT NULL,
+    "net" BOOLEAN,
+    "window" INTEGER,
+    "rocket" TEXT,
+    "success" BOOLEAN,
     "details" TEXT,
     "crew" TEXT[],
     "ships" TEXT[],
     "capsules" TEXT[],
     "payloads" TEXT[],
-    "launchpad" TEXT NOT NULL,
-    "flightNumber" INTEGER NOT NULL,
-    "name" TEXT NOT NULL,
-    "dateUtc" TIMESTAMP(3) NOT NULL,
-    "dateUnix" INTEGER NOT NULL,
-    "dateLocal" TIMESTAMP(3) NOT NULL,
-    "datePrecision" TEXT NOT NULL,
-    "upcoming" BOOLEAN NOT NULL,
-    "autoUpdate" BOOLEAN NOT NULL,
-    "tbd" BOOLEAN NOT NULL,
+    "launchpad" TEXT,
+    "flightNumber" INTEGER,
+    "name" TEXT,
+    "dateUtc" TIMESTAMP(3),
+    "dateUnix" INTEGER,
+    "dateLocal" TIMESTAMP(3),
+    "datePrecision" TEXT,
+    "upcoming" BOOLEAN,
+    "autoUpdate" BOOLEAN,
+    "tbd" BOOLEAN,
     "launchLibraryId" TEXT,
 
     CONSTRAINT "launch_pkey" PRIMARY KEY ("id")

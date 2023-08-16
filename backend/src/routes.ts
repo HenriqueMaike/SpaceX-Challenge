@@ -1,6 +1,6 @@
 import {Router, Request, Response } from 'express';
 import { CadastrarController } from './controllers/CadastrarController';
-import { PopularBanco } from './middlewares/PopularBanco';
+import { PopularBanco }  from './middlewares/PopularBanco';
 
 const router = Router();
 

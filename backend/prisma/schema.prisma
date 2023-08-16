@@ -12,9 +12,9 @@ datasource db {
 
 model Fairing{
   id              Int         @id @default(autoincrement())
-  reused          Boolean
-  ecovery_attempt Boolean
-  recovered       Boolean
+  reused          Boolean?
+  ecovery_attempt Boolean?
+  recovered       Boolean?
   ships           String[]
 
   launch Launch @relation(fields: [launch_id], references: [id])
@@ -25,8 +25,8 @@ model Fairing{
 
 model PatchLinks {
   id              Int         @id @default(autoincrement())
-  small           String
-  large           String
+  small           String?
+  large           String?
 
   links Links @relation(fields: [links_id], references: [id])
 
@@ -79,9 +79,9 @@ model Links {
 
 model Failure {
   id              Int         @id @default(autoincrement())
-  time            Int
-  altitude        Int
-  reason          String
+  time            Int?
+  altitude        Int?
+  reason          String?
 
   launch Launch @relation(fields: [launch_id], references: [id])
 
@@ -91,12 +91,12 @@ model Failure {
 
 model Cores {
   id              Int      @id @default(autoincrement())
-  core            String
-  flight          Int
-  gridfins        Boolean
-  legs            Boolean
-  reused          Boolean
-  landingAttempt  Boolean
+  core            String?
+  flight          Int?
+  gridfins        Boolean?
+  legs            Boolean?
+  reused          Boolean?
+  landingAttempt  Boolean?
   landingSuccess  Boolean?
   landingType     String?
   landpad         String?
@@ -108,17 +108,17 @@ model Cores {
 }
 
 model Launch {
-  id                Int        @id @default(autoincrement())
+  id                Int        @id
 
   fairings          Fairing[]
   links             Links[]
 
   staticFireDateUtc DateTime?
   staticFireDateUnix Int?
-  net               Boolean
-  window            Int
-  rocket            String
-  success           Boolean
+  net               Boolean?
+  window            Int?
+  rocket            String?
+  success           Boolean?
 
   failures          Failure[]
 
@@ -127,19 +127,19 @@ model Launch {
   ships             String[]
   capsules          String[]
   payloads          String[]
-  launchpad         String
-  flightNumber      Int
-  name              String
-  dateUtc           String
-  dateUnix          Int
-  dateLocal         String
-  datePrecision     String
-  upcoming          Boolean
+  launchpad         String?
+  flightNumber      Int?
+  name              String?
+  dateUtc           DateTime?
+  dateUnix          Int?
+  dateLocal         DateTime?
+  datePrecision     String?
+  upcoming          Boolean?
 
   cores             Cores[]
 
-  autoUpdate        Boolean
-  tbd               Boolean
+  autoUpdate        Boolean?
+  tbd               Boolean?
   launchLibraryId   String?
 
   @@map("launch")
