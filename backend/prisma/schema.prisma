@@ -130,9 +130,9 @@ model Launch {
   launchpad         String
   flightNumber      Int
   name              String
-  dateUtc           DateTime
+  dateUtc           String
   dateUnix          Int
-  dateLocal         DateTime
+  dateLocal         String
   datePrecision     String
   upcoming          Boolean
 
