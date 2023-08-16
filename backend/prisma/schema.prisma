@@ -20,7 +20,7 @@ model Fairing{
   launch Launch @relation(fields: [launch_id], references: [id])
 
   @@map("fairing")
-  launch_id Int
+  launch_id String
 }
 
 model PatchLinks {
@@ -61,20 +61,20 @@ model FlickrLinks {
 model Links {
   id              Int         @id @default(autoincrement())
 
-  patchLinks PatchLinks[]
-  redditLinks RedditLinks[]
-  flickrLinks FlickrLinks[]
+  patch_links PatchLinks[]
+  reddit_links RedditLinks[]
+  flickr_links FlickrLinks[]
 
   presskit        String?
   webcast         String?
-  youtubeId       String?
+  youtube_id       String?
   article         String?
   wikipedia       String?
 
   launch Launch @relation(fields: [launch_id], references: [id])
 
   @@map("links")
-  launch_id Int
+  launch_id String
 }
 
 model Failure {
@@ -86,7 +86,7 @@ model Failure {
   launch Launch @relation(fields: [launch_id], references: [id])
 
   @@map("failure")
-  launch_id Int
+  launch_id String
 }
 
 model Cores {
@@ -96,51 +96,64 @@ model Cores {
   gridfins        Boolean?
   legs            Boolean?
   reused          Boolean?
-  landingAttempt  Boolean?
-  landingSuccess  Boolean?
-  landingType     String?
+  landing_attempt  Boolean?
+  landing_success  Boolean?
+  landing_type     String?
   landpad         String?
 
   launch Launch @relation(fields: [launch_id], references: [id])
 
   @@map("cores")
-  launch_id Int
+  launch_id String
+}
+
+model Crew {
+  id              Int      @id @default(autoincrement())
+  crew            String?
+  role            String?
+
+  launch Launch @relation(fields: [launch_id], references: [id])
+
+  @@map("crew")
+  launch_id String
 }
 
 model Launch {
-  id                Int        @id
+  id          String    @id
 
-  fairings          Fairing[]
-  links             Links[]
+  fairings            Fairing[]
+  links               Links[]
 
-  staticFireDateUtc DateTime?
-  staticFireDateUnix Int?
-  net               Boolean?
-  window            Int?
-  rocket            String?
-  success           Boolean?
+  static_fire_date_utc  String?
+  static_fire_date_unix Int?
+  net                   Boolean?
+  window                Int?
+  rocket                String?
+  success               Boolean?
 
-  failures          Failure[]
+  failures              Failure[]
 
-  details           String?
-  crew              String[]
-  ships             String[]
-  capsules          String[]
-  payloads          String[]
-  launchpad         String?
-  flightNumber      Int?
-  name              String?
-  dateUtc           DateTime?
-  dateUnix          Int?
-  dateLocal         DateTime?
-  datePrecision     String?
-  upcoming          Boolean?
+  details               String?
 
-  cores             Cores[]
+  crew                  Crew[]
+  
+  ships                 String[]
+  capsules              String[]
+  payloads              String[]
+  launchpad             String?
+  flight_number         Int?
+  name                  String?
+  date_utc              String?
+  date_unix             Int?
+  date_local            String?
+  date_precision        String?
+  upcoming              Boolean?
 
-  autoUpdate        Boolean?
-  tbd               Boolean?
-  launchLibraryId   String?
+  cores                 Cores[]
+
+  auto_update         Boolean?
+  tbd                 Boolean?
+  launch_library_id   String?
 
   @@map("launch")
 }

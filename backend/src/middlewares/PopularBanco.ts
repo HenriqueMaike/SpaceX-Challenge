@@ -63,6 +63,12 @@ export interface Cores {
     launch_id: number;
 }
 
+export interface Crew {
+    id: number;
+    crew?: string;
+    role?: string;
+}
+
 export interface Launch {
     id: number;
     fairings: Fairing[];
@@ -75,7 +81,7 @@ export interface Launch {
     success: boolean;
     failures: Failure[];
     details?: string;
-    crew: string[];
+    crew: Crew[];
     ships: string[];
     capsules: string[];
     payloads: string[];
@@ -93,62 +99,69 @@ export interface Launch {
     launch_library_id?: string;
 }
 
-export interface DadosRequest {
-    dados: {
-        fairings: Fairing[];
-        patchLinks: PatchLinks[];
-        redditLinks: RedditLinks[];
-        flickrLinks: FlickrLinks[];
-        links: Links[];
-        failures: Failure[];
-        cores: Cores[];
-        Launch: Launch;
-    };
-}
+// export interface DadosRequest {
+//     dados: {
+//         fairings: Fairing[];
+//         patchLinks: PatchLinks[];
+//         redditLinks: RedditLinks[];
+//         flickrLinks: FlickrLinks[];
+//         links: Links[];
+//         failures: Failure[];
+//         cores: Cores[];
+//         Launch: Launch;
+//     };
+// }
 
 const PopularBanco = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const response = await axios.get('https://api.spacexdata.com/v5/launches');
-      const responseData = response.data as Launch[];
+        const response = await axios.get('https://api.spacexdata.com/v5/launches');
+        const responseData = response.data as Launch[];
   
-      if (responseData.length > 0) {
-        for (const launchData of responseData) {
-          const launch = {
-            id: launchData.id,
-            static_fire_date_utc: launchData.static_fire_date_utc,
-            static_fire_date_unix: launchData.static_fire_date_unix,
-            net: launchData?.net,
-            window: launchData?.window,
-            rocket: launchData?.rocket,
-            success: launchData?.success,
-            details: launchData?.details,
-            crew: launchData?.crew,
-            ships: launchData?.ships,
-            capsules: launchData?.capsules,
-            payloads: launchData?.payloads,
-            launchpad: launchData?.launchpad,
-            flight_number: launchData?.flight_number,
-            name: launchData?.name,
-            date_utc: launchData?.date_utc,
-            date_unix: launchData?.date_unix,
-            date_local: launchData?.date_local,
-            date_precision: launchData?.date_precision,
-            upcoming: launchData?.upcoming,
-            auto_update: launchData?.auto_update,
-            tbd: launchData?.tbd,
-            launch_library_id: launchData?.launch_library_id,
-          };
-  
-          console.log(launch);
+        if (responseData.length > 0) {
+            for (const launchData of responseData) {
+                
+                const existingLaunch = await prismaClient.launch.findUnique({
+                    where: { id: launchData.id }
+                });
+                if (!existingLaunch) {
+                    await prismaClient.launch.create({
+                        data:{
+                            id: launchData.id,
+                            static_fire_date_utc: launchData.static_fire_date_utc,
+                            static_fire_date_unix: launchData.static_fire_date_unix,
+                            net: launchData.net,
+                            window: launchData.window,
+                            rocket: launchData.rocket,
+                            success: launchData.success,
+                            details: launchData.details,
+                            ships: launchData.ships,
+                            capsules: launchData.capsules,
+                            payloads: launchData.payloads,
+                            launchpad: launchData.launchpad,
+                            flight_number: launchData.flight_number,
+                            name: launchData.name,
+                            date_utc: launchData.date_utc,
+                            date_unix: launchData.date_unix,
+                            date_local: launchData.date_local,
+                            date_precision: launchData.date_precision,
+                            upcoming: launchData.upcoming,
+                            auto_update: launchData.auto_update,
+                            tbd: launchData.tbd,
+                            launch_library_id: launchData.launch_library_id,
+                        }
+                    })
+                }
+            }         
+            return res.status(200).json({ message: 'Database populated successfully' });
+
+        } else {
+            console.log('Nenhum dado de lançamento encontrado.');
         }
-  
-        return res.status(200).json({ message: 'Database populated successfully' });
-      } else {
-        console.log('Nenhum dado de lançamento encontrado.');
-      }
+
     } catch (err) {
-      return res.status(401).end();
+        console.log('Erro ao cadastrar');
+        return res.status(401).end();
     }
-  };
+};
 
 export { PopularBanco };
