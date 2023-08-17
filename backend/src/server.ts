@@ -11,13 +11,14 @@ app.use(cors());
 
 app.use(router);
 
+//Chama a função que popula o banco toda vez que o servidos é iniciado
 PopularBanco();
 
-// Agendamento da função popularBanco para ser chamada todos os dias às 9 horas da manhã
+// Agenda função popularBanco para ser chamada todos os dias às 9 horas da manhã
 const cron = require('node-cron');
 cron.schedule('0 9 * * *', async () => {
     try {
-        await PopularBanco(); // Chama a função PopularBanco sem argumentos
+        await PopularBanco(); // Chama a função PopularBanco
         console.log('Atualização de dados execultado com sucesso.');
     } catch (error) {
         console.error('Erro ao execultar atualização ao popular dados no banco:', error);
@@ -32,6 +33,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof Error) {
         let statusCode = 500;
         
+        //verificações de tipo de erro gerados para exibir a mensagem correspondente
         if (err.message === 'Error message') {
             statusCode = 400;
         } else if (err.message === 'sucesso sem body') {
@@ -44,7 +46,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
             error: err.message
         });
     }
-
     return res.status(500).json({
         status: 'error',
         message: 'Internal server error.'
@@ -52,4 +53,5 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 })
 
+//Inicia o server na porta 3333 com a mensagem Servidor online!
 app.listen(3333, () => console.log('Servidor online!'))

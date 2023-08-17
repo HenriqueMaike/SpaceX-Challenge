@@ -10,12 +10,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Models responsavis por criar as tabelas do banco de dados
+
+//Tabela Fairing com chave estrangeira para a tabela launcher
 model Fairing{
-  id              Int         @id @default(autoincrement())
-  reused          Boolean?
-  recovery_attempt Boolean?
-  recovered       Boolean?
-  ships           String[]
+  id                          Int               @id @default(autoincrement())
+  reused                      Boolean?
+  recovery_attempt            Boolean?
+  recovered                   Boolean?
+  ships                       String[]
 
   launch Launch @relation(fields: [launch_id], references: [id])
 
@@ -23,10 +26,12 @@ model Fairing{
   launch_id String
 }
 
+
+//Tabela PatchLinks com chave estrangeira para a tabela Links
 model PatchLinks {
-  id              Int         @id @default(autoincrement())
-  small           String?
-  large           String?
+  id                          Int               @id @default(autoincrement())
+  small                       String?
+  large                       String?
 
   links Links @relation(fields: [links_id], references: [id])
 
@@ -34,12 +39,14 @@ model PatchLinks {
   links_id Int
 }
 
+
+//Tabela RedditLinks com chave estrangeira para a tabela Links
 model RedditLinks {
-  id              Int         @id @default(autoincrement())
-  campaign        String?
-  launch          String?
-  media           String?
-  recovery        String?
+  id                        Int                 @id @default(autoincrement())
+  campaign                  String?
+  launch                    String?
+  media                     String?
+  recovery                  String?
 
   links Links @relation(fields: [links_id], references: [id])
 
@@ -47,10 +54,12 @@ model RedditLinks {
   links_id Int
 }
 
+
+//Tabela FlickrLinks com chave estrangeira para a tabela Links
 model FlickrLinks {
-  id              Int         @id @default(autoincrement())
-  small           String[]
-  original        String[]
+  id                      Int                   @id @default(autoincrement())
+  small                   String[]
+  original                String[]
 
   links Links @relation(fields: [links_id], references: [id])
 
@@ -58,18 +67,21 @@ model FlickrLinks {
   links_id Int
 }
 
+
+//Tabela Links que possui relacionamento com a tabela patch_links, reddit_links, flickr_links sendo que a tebela Links por conter varios 
+//patch_links, reddit_links, flickr_links e os respectivos podem ter somente um Links
 model Links {
-  id              Int         @id @default(autoincrement())
+  id                      Int                   @id @default(autoincrement())
 
   patch_links PatchLinks[]
   reddit_links RedditLinks[]
   flickr_links FlickrLinks[]
 
-  presskit        String?
-  webcast         String?
-  youtube_id       String?
-  article         String?
-  wikipedia       String?
+  presskit                String?
+  webcast                 String?
+  youtube_id              String?
+  article                 String?
+  wikipedia               String?
 
   launch Launch @relation(fields: [launch_id], references: [id])
 
@@ -77,11 +89,13 @@ model Links {
   launch_id String
 }
 
+
+//Tabela Failure com chave estrangeira para a tabela launcher
 model Failure {
-  id              Int         @id @default(autoincrement())
-  time            Int?
-  altitude        Int?
-  reason          String?
+  id                      Int                   @id @default(autoincrement())
+  time                    Int?
+  altitude                Int?
+  reason                  String?
 
   launch Launch @relation(fields: [launch_id], references: [id])
 
@@ -89,17 +103,19 @@ model Failure {
   launch_id String
 }
 
+
+//Tabela Cores com chave estrangeira para a tabela launcher
 model Cores {
-  id              Int      @id @default(autoincrement())
-  core            String?
-  flight          Int?
-  gridfins        Boolean?
-  legs            Boolean?
-  reused          Boolean?
-  landing_attempt  Boolean?
-  landing_success  Boolean?
-  landing_type     String?
-  landpad         String?
+  id                      Int                   @id @default(autoincrement())
+  core                    String?
+  flight                  Int?
+  gridfins                Boolean?
+  legs                    Boolean?
+  reused                  Boolean?
+  landing_attempt         Boolean?
+  landing_success         Boolean?
+  landing_type            String?
+  landpad                 String?
 
   launch Launch @relation(fields: [launch_id], references: [id])
 
@@ -107,10 +123,12 @@ model Cores {
   launch_id String
 }
 
+
+//Tabela Crew com chave estrangeira para a tabela launcher
 model Crew {
-  id              Int      @id @default(autoincrement())
-  crew            String?
-  role            String?
+  id                      Int                   @id @default(autoincrement())
+  crew                    String?
+  role                    String?
 
   launch Launch @relation(fields: [launch_id], references: [id])
 
@@ -118,40 +136,43 @@ model Crew {
   launch_id String
 }
 
+
+//Tabela Launch é a principal tabela ontem contem vinculo com todas a demais tabelas.
+//Id não é auto inclementado porque utiliza o id de launch fornecido pela propria API da spaceX
 model Launch {
-  id          String    @id
+  id          String                            @id
 
-  fairings            Fairing[]
-  links               Links[]
+  fairings Fairing[]
+  links Links[]
 
-  static_fire_date_utc  String?
-  static_fire_date_unix Int?
-  net                   Boolean?
-  window                Int?
-  rocket                String?
-  success               Boolean?
+  static_fire_date_utc    String?
+  static_fire_date_unix   Int?
+  net                     Boolean?
+  window                  Int?
+  rocket                  String?
+  success                 Boolean?
 
-  failures              Failure[]
+  failures Failure[]
 
-  details               String?
-  crew                  Crew[]
-  ships                 String[]
-  capsules              String[]
-  payloads              String[]
-  launchpad             String?
-  flight_number         Int?
-  name                  String?
-  date_utc              String?
-  date_unix             Int?
-  date_local            String?
-  date_precision        String?
-  upcoming              Boolean?
+  details                 String?
+  crew Crew[]
+  ships                   String[]
+  capsules                String[]
+  payloads                String[]
+  launchpad               String?
+  flight_number           Int?
+  name                    String?
+  date_utc                String?
+  date_unix               Int?
+  date_local              String?
+  date_precision          String?
+  upcoming                Boolean?
 
-  cores                 Cores[]
+  cores Cores[]
 
-  auto_update         Boolean?
-  tbd                 Boolean?
-  launch_library_id   String?
+  auto_update             Boolean?
+  tbd                     Boolean?
+  launch_library_id       String?
 
   @@map("launch")
 }

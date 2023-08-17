@@ -1,6 +1,9 @@
 import prismaClient from "../prisma";
 
+//Biblioteca Axios responsavel pela requisicao da API
 const axios = require('axios');
+
+//Tipagem do objeto Launch recebido pela API com todos os seus Arrays e types especificos
 interface Launch {
     id: string;
     fairings: {
@@ -94,21 +97,30 @@ interface Launch {
     launch_library_id?: string;
 }
   
-
+//Função responsavel por popular o banco de dados com os dados obtidos pela API
 const PopularBanco = async () => {
+    // response é a variavel responsavel por receber a requisicao a API spaceS atraves do axios
     const response = await axios.get('https://api.spacexdata.com/v5/launches');
+
+    ///responseLaunch recebe os dados do response e tipa como Launch
     const responseLaunch = response.data as Launch[];
 
+    //função responsavel por povoar o banco de dados com as informações de responseLaunch
     async function PopularLaunch(){
-        try {
-    
+        try { 
+            //Verifica se responseLaunch possui dados se sim avança
             if (responseLaunch.length > 0) {
+                //laço de repetição e execulta a quantidade de vezes o tamanho do array responseLaunch
                 for (const launchData of responseLaunch) {
-                                        
+                    
+                    //verifica se dentro da tabela launch ja existe um id igual o obtido da API se sim armazena na existingLaunch
                     const existingLaunch = await prismaClient.launch.findUnique({
                         where: { id: launchData.id }
                     });
+                    //se existingLaunch estiver vazia adiciona os dados no banco, se ja existir o id verifica o proximo até verificar todos os objeto do array
                     if (!existingLaunch) {
+
+                        //povoa a tabela launch
                         await prismaClient.launch.create({
                             data:{
                                 id: launchData.id,
@@ -135,6 +147,9 @@ const PopularBanco = async () => {
                                 launch_library_id: launchData.launch_library_id,
                             }
                         })
+
+                        //povoa a tabela link e arvazena os dados temporariamente na variavel link para poder ser usada para ensirir os dados 
+                        //nas tabelas que possuem dependencia do ID de links
                         const link = await prismaClient.links.create({
                             data: {
                                 presskit: launchData.links.presskit,
@@ -145,6 +160,8 @@ const PopularBanco = async () => {
                                 launch_id: launchData.id
                             }
                         }); 
+
+                        //Povoa a tabela patchLinks e vincula o ID de links obtido da variavel link
                         await prismaClient.patchLinks.create({
                             data: {
                                 small: launchData?.links.patch.small,
@@ -152,6 +169,8 @@ const PopularBanco = async () => {
                                 links_id: link?.id
                             }
                         }); 
+
+                        //Povoa a tabela redditLinks e vincula o ID de links obtido da variavel link
                         await prismaClient.redditLinks.create({
                             data: {
                                 campaign: launchData?.links.reddit.campaign,
@@ -161,6 +180,8 @@ const PopularBanco = async () => {
                                 links_id: link?.id
                             }
                         });
+
+                        //Povoa a tabela flickrLinks e vincula o ID de links obtido da variavel link
                         await prismaClient.flickrLinks.create({
                             data: {
                                 small: launchData?.links.flickr.small,
@@ -169,8 +190,9 @@ const PopularBanco = async () => {
                             }
                         });
 
-
+                        //Verifica se fairings existe, se sim adiciona os dados na tabela, se não so prossegue
                         if (launchData?.fairings) {
+                            //Povoa a tabela fairing
                             await prismaClient.fairing.create({
                                 data: {
                                     reused: launchData.fairings.reused ?? null,
@@ -181,8 +203,10 @@ const PopularBanco = async () => {
                                 }
                             });
                         }
-
+                        
+                        //Verifica se failures existe, se sim adiciona os dados na tabela, se não so prossegue
                         if (launchData?.failures) {
+                            //Povoa a tabela failures, como recebe um array utiliza um laço de repetiçao para verificar se existe mais dados para inserir
                             for (const failure of launchData.failures) {
                                 await prismaClient.failure.create({
                                     data: {
@@ -194,8 +218,10 @@ const PopularBanco = async () => {
                                 });
                             }
                         }
-
+                        
+                        //Verifica se cores existe, se sim adiciona os dados na tabela, se não so prossegue
                         if (launchData?.cores) {
+                            //Povoa a tabela cores, como recebe um array utiliza um laço de repetiçao para verificar se existe mais dados para inserir
                             for (const cores of launchData.cores) {
                                 await prismaClient.cores.create({
                                     data: {
@@ -214,7 +240,9 @@ const PopularBanco = async () => {
                             }
                         }
 
+                        //Verifica se crew existe, se sim adiciona os dados na tabela, se não so prossegue
                         if (launchData?.crew) {
+                            //Povoa a tabela crew, como recebe um array utiliza um laço de repetiçao para verificar se existe mais dados para inserir
                             for (const crew of launchData.crew) {
                                 await prismaClient.crew.create({
                                     data: {
@@ -229,15 +257,18 @@ const PopularBanco = async () => {
                 }
 
             } else {
+                //devolve no console se nenhum dados for encontado caso responseLaunch.length for === 0
                 console.log('Nenhum dado de lançamento encontrado.');
             }
     
         } catch (err) {
+            //se encontrar alguns erro durando o povoamento das tabelas devolve um console Erro ao cadastrar e encerra
             console.log('Erro ao cadastrar');
             return;
         }
     }
     
+    //Chama a função PopularLaunch
     PopularLaunch();
 };
 
