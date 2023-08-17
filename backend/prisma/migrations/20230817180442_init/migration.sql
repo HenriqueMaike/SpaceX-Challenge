@@ -2,10 +2,10 @@
 CREATE TABLE "fairing" (
     "id" SERIAL NOT NULL,
     "reused" BOOLEAN,
-    "ecovery_attempt" BOOLEAN,
+    "recovery_attempt" BOOLEAN,
     "recovered" BOOLEAN,
     "ships" TEXT[],
-    "launch_id" INTEGER NOT NULL,
+    "launch_id" TEXT NOT NULL,
 
     CONSTRAINT "fairing_pkey" PRIMARY KEY ("id")
 );
@@ -50,7 +50,7 @@ CREATE TABLE "links" (
     "youtube_id" TEXT,
     "article" TEXT,
     "wikipedia" TEXT,
-    "launch_id" INTEGER NOT NULL,
+    "launch_id" TEXT NOT NULL,
 
     CONSTRAINT "links_pkey" PRIMARY KEY ("id")
 );
@@ -61,7 +61,7 @@ CREATE TABLE "failure" (
     "time" INTEGER,
     "altitude" INTEGER,
     "reason" TEXT,
-    "launch_id" INTEGER NOT NULL,
+    "launch_id" TEXT NOT NULL,
 
     CONSTRAINT "failure_pkey" PRIMARY KEY ("id")
 );
@@ -78,31 +78,40 @@ CREATE TABLE "cores" (
     "landing_success" BOOLEAN,
     "landing_type" TEXT,
     "landpad" TEXT,
-    "launch_id" INTEGER NOT NULL,
+    "launch_id" TEXT NOT NULL,
 
     CONSTRAINT "cores_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
+CREATE TABLE "crew" (
+    "id" SERIAL NOT NULL,
+    "crew" TEXT,
+    "role" TEXT,
+    "launch_id" TEXT NOT NULL,
+
+    CONSTRAINT "crew_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "launch" (
-    "id" INTEGER NOT NULL,
-    "static_fire_date_utc" TIMESTAMP(3),
+    "id" TEXT NOT NULL,
+    "static_fire_date_utc" TEXT,
     "static_fire_date_unix" INTEGER,
     "net" BOOLEAN,
     "window" INTEGER,
     "rocket" TEXT,
     "success" BOOLEAN,
     "details" TEXT,
-    "crew" TEXT[],
     "ships" TEXT[],
     "capsules" TEXT[],
     "payloads" TEXT[],
     "launchpad" TEXT,
     "flight_number" INTEGER,
     "name" TEXT,
-    "date_utc" TIMESTAMP(3),
+    "date_utc" TEXT,
     "date_unix" INTEGER,
-    "date_local" TIMESTAMP(3),
+    "date_local" TEXT,
     "date_precision" TEXT,
     "upcoming" BOOLEAN,
     "auto_update" BOOLEAN,
@@ -132,3 +141,6 @@ ALTER TABLE "failure" ADD CONSTRAINT "failure_launch_id_fkey" FOREIGN KEY ("laun
 
 -- AddForeignKey
 ALTER TABLE "cores" ADD CONSTRAINT "cores_launch_id_fkey" FOREIGN KEY ("launch_id") REFERENCES "launch"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "crew" ADD CONSTRAINT "crew_launch_id_fkey" FOREIGN KEY ("launch_id") REFERENCES "launch"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

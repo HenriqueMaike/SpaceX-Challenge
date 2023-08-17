@@ -1,6 +1,5 @@
 import {Router, Request, Response } from 'express';
 import { CadastrarController } from './controllers/CadastrarController';
-import { PopularBanco }  from './middlewares/PopularBanco';
 
 const router = Router();
 
@@ -11,6 +10,6 @@ router.get('/', (req: Request, res: Response)=>{
     return res.json(message);
 });
 
-router.get('/launches', PopularBanco, new CadastrarController().handle)
+router.get('/launches', new CadastrarController().handle)
 
 export { router };

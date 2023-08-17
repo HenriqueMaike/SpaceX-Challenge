@@ -13,7 +13,7 @@ datasource db {
 model Fairing{
   id              Int         @id @default(autoincrement())
   reused          Boolean?
-  ecovery_attempt Boolean?
+  recovery_attempt Boolean?
   recovered       Boolean?
   ships           String[]
 
@@ -134,9 +134,7 @@ model Launch {
   failures              Failure[]
 
   details               String?
-
   crew                  Crew[]
-  
   ships                 String[]
   capsules              String[]
   payloads              String[]
