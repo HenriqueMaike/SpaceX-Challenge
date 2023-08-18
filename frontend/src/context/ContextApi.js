@@ -1,21 +1,25 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, ReactNode } from "react";
 import api from "../service/api";
 
 export const ContextApi = createContext();
+
+ContextProvider.propTypes = {
+  children: ReactNode,
+};
 
 export function ContextProvider({ children }) {
   const [launches, setLaunches] = useState([{}]);
 
   const [page, setPage] = useState();
-  const [name, setName] = useState('');
+  const [search, setSearch] = useState('');
   const [limit, setLimit] = useState();
 
-  async function LaunchesRequest(page, name, limit) {
+  async function LaunchesRequest(page, search, limit) {
     try {
       const response = await api.get('launches', {
         params:{
           page: page,
-          name: name,
+          search: search,
           limit: limit,
         }
       });
@@ -27,13 +31,13 @@ export function ContextProvider({ children }) {
   }
 
   useEffect(() => {
-    LaunchesRequest(page, name, limit);
+    LaunchesRequest(page, search, limit);
 
-    setName(name);
+    setSearch(search);
     setPage(page);
     setLimit(limit)
 
-  }, [page, name, limit]);
+  }, [page, search, limit]);
 
   return (
     <ContextApi.Provider value={{ launches, LaunchesRequest }}>

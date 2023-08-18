@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { ContextApi } from '../../context/ContextApi';
 import styles from './style.module.scss'
 import Pagination from '../../components/pagination';
+import Buscar from '../../components/Buscar';
 
 function Home() {
     const { launches } = useContext(ContextApi);
@@ -17,33 +18,40 @@ function Home() {
 
     return (
         <div className={styles.container}>
-            <div className={styles.listaLaunches}>
+                <h3>Busca registro de lançamento</h3>
+                <Buscar/>
+            <div className={styles.listaLaunches}>  
                 <table className={styles.table}>
-                    <thead className={styles.thead}>
-                        <tr>
-                            <th>N do Voo</th>
-                            <th>Logo</th>
-                            <th>Missão</th>
-                            <th>Data de Lançamento</th>
-                            <th>Foguete</th>
-                            <th>Resultado</th>
-                            <th>Vídeo</th>
-                        </tr>
-                    </thead>
+                    <div className={styles.theadDiv}>
+                        <thead className={styles.thead}>
+                            <tr>
+                                <th>N do Voo</th>
+                                <th>Logo</th>
+                                <th>Missão</th>
+                                <th>Data de Lançamento</th>
+                                <th>Foguete</th>
+                                <th>Resultado</th>
+                                <th>Vídeo</th>
+                            </tr>
+                        </thead>
+                    </div>
                     <tbody className={styles.tbody}>
                         {launchesData.map((launch) => (
                         <tr key={launch.id}>
-                            <td>
-                                {launch.flight_number}
-                            </td>
+                            <div className={styles.tbodyDiv}>
+                                <td>
+                                    {launch.flight_number}
+                                </td>
 
-                            <td>
-                                <img src={launch.links[0].patch_links[0].small} alt={`logo ${launch.name}`} />
-                            </td>
-
-                            <td>
-                                {launch.name}
-                            </td>
+                                <td>
+                                    <img src={launch.links[0].patch_links[0].small} alt={`logo ${launch.name}`} />
+                                </td>
+                            </div>
+                            
+                            <div className={styles.tbodyDiv}>
+                                <td>
+                                    {launch.name}
+                                </td>
 
                                 <td>
                                     {
@@ -57,32 +65,37 @@ function Home() {
                                         })()
                                     }
                                 </td>
-                            
-                            <td>
-                                {launch.rocket_data[0].name}
-                            </td>
+                            </div>
 
-                            <td>                                 
-                            {
-                                (() => {
-                                    return launch.success ? (
-                                    <span style={{ backgroundColor: "#17a362", padding: "0.2em 0.5em", borderRadius: "4px", color: "#FFF", height: 20 }}>
-                                        Sucesso
-                                    </span>
-                                    ) : (
-                                    <span style={{ backgroundColor: "#da4a64", padding: "0.2em 0.5em", borderRadius: "4px", color: "#FFF", height: 20 }}>
-                                        Falha
-                                    </span>
-                                    );
-                                })()
-                            }
-                            </td>
+                            <div className={styles.tbodyDiv}>
+                                <td>
+                                    {launch.rocket_data[0].name}
+                                </td>
 
-                            <td>
-                                <a href={launch.links[0].webcast} target='blank'>
-                                    <img src='./youtube.png' alt='youtube' /> 
-                                </a>
-                            </td>
+                                <td>                                 
+                                {
+                                    (() => {
+                                        return launch.success ? (
+                                        <span style={{ backgroundColor: "#17a362", padding: "0.2em 0.5em", borderRadius: "4px", color: "#FFF", height: 20 }}>
+                                            Sucesso
+                                        </span>
+                                        ) : (
+                                        <span style={{ backgroundColor: "#da4a64", padding: "0.2em 0.5em", borderRadius: "4px", color: "#FFF", height: 20 }}>
+                                            Falha
+                                        </span>
+                                        );
+                                    })()
+                                }
+                                </td>
+                            </div>
+
+                            <div className={styles.tbodyDiv}>
+                                <td>
+                                    <a href={launch.links[0].webcast} target='blank'>
+                                        <img src='./youtube.png' alt='youtube' /> 
+                                    </a>
+                                </td>
+                            </div>
 
                         </tr>
                         ))}

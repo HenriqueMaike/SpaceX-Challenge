@@ -7,8 +7,8 @@ function Pagination() {
   const { LaunchesRequest } = useContext(ContextApi);
   const { launches } = useContext(ContextApi);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState();
+  const [totalPages, setTotalPages] = useState();
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
 
