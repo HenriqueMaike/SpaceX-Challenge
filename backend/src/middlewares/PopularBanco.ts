@@ -95,15 +95,51 @@ interface Launch {
     auto_update?: boolean;
     tbd?: boolean;
     launch_library_id?: string;
+    rocket_data:{
+        id: String;
+        name: string;
+        type: string;
+        active: Boolean;
+        stages: number;
+        boosters: number;
+        cost_per_launch: number;
+        success_rate_pct: number;
+        first_flight: string;
+        country: string;
+        company: string;
+        wikipedia: string;
+        description: string;
+        launch_id: string;
+    };
 }
+
+interface RocketData{
+    rocket_id: number;
+    id: String;
+    name: string;
+    type: string;
+    active: Boolean;
+    stages: number;
+    boosters: number;
+    cost_per_launch: number;
+    success_rate_pct: number;
+    first_flight: string;
+    country: string;
+    company: string;
+    wikipedia: string;
+    description: string;
+    launch_id: string;
+};
   
 //Função responsavel por popular o banco de dados com os dados obtidos pela API
 const PopularBanco = async () => {
     // response é a variavel responsavel por receber a requisicao a API spaceS atraves do axios
     const response = await axios.get('https://api.spacexdata.com/v5/launches');
+    const responseRocket = await axios.get('https://api.spacexdata.com/v4/rockets');
 
     ///responseLaunch recebe os dados do response e tipa como Launch
     const responseLaunch = response.data as Launch[];
+    const responseRocketData = responseRocket.data as RocketData[];
 
     //função responsavel por povoar o banco de dados com as informações de responseLaunch
     async function PopularLaunch(){
@@ -253,6 +289,35 @@ const PopularBanco = async () => {
                                 });
                             }
                         }
+
+                        //Função que verifica se em launchData.rocket possui um id igual a responseRocketData
+                        // Se houver armazena em matchingRocketData
+                        const matchingRocketData = responseRocketData.find(
+                            (rocket) => rocket.id  === launchData.rocket
+                        );
+
+                        // Se houver entao popula a tabela rocket com os dados do fogues e relaciona ao id da tabela Launch
+                        if (matchingRocketData) {
+                            await prismaClient.rocket.create({
+                                data: {
+                                    id: matchingRocketData.id,
+                                    name: matchingRocketData.name,
+                                    type: matchingRocketData.type,
+                                    active: matchingRocketData.active,
+                                    stages: matchingRocketData.stages,
+                                    boosters: matchingRocketData.boosters,
+                                    cost_per_launch: matchingRocketData.cost_per_launch,
+                                    success_rate_pct: matchingRocketData.success_rate_pct,
+                                    first_flight: matchingRocketData.first_flight,
+                                    country: matchingRocketData.country,
+                                    company: matchingRocketData.company,
+                                    wikipedia: matchingRocketData.wikipedia,
+                                    description: matchingRocketData.description,
+                                    launch_id: launchData.id,
+                                }
+                            });
+                        }
+
                     }
                 }
 

@@ -24,6 +24,7 @@ class ListarLaunchesrService {
         failures: true,
         crew: true,
         cores: true,
+        rocket_data: true,
       },
     });
 

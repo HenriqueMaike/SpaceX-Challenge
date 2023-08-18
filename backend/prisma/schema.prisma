@@ -12,6 +12,30 @@ datasource db {
 
 // Models responsavis por criar as tabelas do banco de dados
 
+//Tabela Rocket com chave estrangeira para a tabela launcher
+model Rocket{
+  rocket_id                  Int               @id @default(autoincrement())
+  id                         String?
+  name                       String?
+  type                       String?
+  active                     Boolean?
+  stages                     Int?
+  boosters                   Int?
+  cost_per_launch            Int?
+  success_rate_pct           Int?
+  first_flight               String?
+  country                    String?
+  company                    String?
+  wikipedia                  String?
+  description                String?
+
+  launch Launch @relation(fields: [launch_id], references: [id])
+
+  @@map("rocket")
+
+  launch_id String
+}
+
 //Tabela Fairing com chave estrangeira para a tabela launcher
 model Fairing{
   id                          Int               @id @default(autoincrement())
@@ -173,6 +197,8 @@ model Launch {
   auto_update             Boolean?
   tbd                     Boolean?
   launch_library_id       String?
+
+  rocket_data Rocket[]
 
   @@map("launch")
 }

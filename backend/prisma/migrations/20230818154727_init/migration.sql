@@ -1,4 +1,25 @@
 -- CreateTable
+CREATE TABLE "rocket" (
+    "rocket_id" SERIAL NOT NULL,
+    "id" TEXT,
+    "name" TEXT,
+    "type" TEXT,
+    "active" BOOLEAN,
+    "stages" INTEGER,
+    "boosters" INTEGER,
+    "cost_per_launch" INTEGER,
+    "success_rate_pct" INTEGER,
+    "first_flight" TEXT,
+    "country" TEXT,
+    "company" TEXT,
+    "wikipedia" TEXT,
+    "description" TEXT,
+    "launch_id" TEXT NOT NULL,
+
+    CONSTRAINT "rocket_pkey" PRIMARY KEY ("rocket_id")
+);
+
+-- CreateTable
 CREATE TABLE "fairing" (
     "id" SERIAL NOT NULL,
     "reused" BOOLEAN,
@@ -120,6 +141,9 @@ CREATE TABLE "launch" (
 
     CONSTRAINT "launch_pkey" PRIMARY KEY ("id")
 );
+
+-- AddForeignKey
+ALTER TABLE "rocket" ADD CONSTRAINT "rocket_launch_id_fkey" FOREIGN KEY ("launch_id") REFERENCES "launch"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "fairing" ADD CONSTRAINT "fairing_launch_id_fkey" FOREIGN KEY ("launch_id") REFERENCES "launch"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
