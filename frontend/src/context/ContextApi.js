@@ -16,6 +16,7 @@ const [page, setPage] = useState();
 const [search, setSearch] = useState('');
 const [limit, setLimit] = useState();
 
+//função que faz a requisição da API com os params de busca, de 5 em 5 item como na paginação
 async function LaunchesRequest(page, search, limit) {
   try {
     const response = await api.get('launches', {
@@ -35,8 +36,9 @@ async function LaunchesRequest(page, search, limit) {
 }
 
 // Aplicar debounce a LaunchesRequest com um atraso de 300 milissegundos
-const debouncedLaunchesRequest = debounce(LaunchesRequest, 300);
+const debouncedLaunchesRequest = debounce(LaunchesRequest, 3000);
 
+  //função utilizada para obter dados para os graficos, este obtem todos os objetos em results 
   async function LaunchesAllRequest(page, search, limit) {
     try {
       const response = await api.get('launches', {
@@ -55,7 +57,7 @@ const debouncedLaunchesRequest = debounce(LaunchesRequest, 300);
   }
 
   useEffect(() => {
-    // Substitua a chamada direta por debouncedLaunchesRequest
+    // função debounce chamada no lugar de lauchesRequest para aguarda 300 milissegundos
     debouncedLaunchesRequest(page, search, limit);
 
     setSearch(search);

@@ -8,6 +8,7 @@ const GraficoPizza = () => {
   const { launchesAll } = useContext(ContextApi);
   const [rocketDataCounts, setRocketDataCounts] = useState({});
   const [successCounts, setSuccessCounts] = useState({ true: 0, false: 0 });
+  const [rocketsByYear, setRocketsByYear] = useState({});
 
   useEffect(() => {
     if (launchesAll.results) {
@@ -15,8 +16,8 @@ const GraficoPizza = () => {
       const countRocketNames = () => {
         const counts = {};
         launchesAll.results.forEach((launch) => {
-            const rocketName = launch.rocket_data[0].name;
-            counts[rocketName] = (counts[rocketName] || 0) + 1;
+          const rocketName = launch.rocket_data[0].name;
+          counts[rocketName] = (counts[rocketName] || 0) + 1;
         });
         setRocketDataCounts(counts);
       };
@@ -31,8 +32,23 @@ const GraficoPizza = () => {
         setSuccessCounts(counts);
       };
 
+      // Função para contar a ocorrência de foguetes por ano
+      const countRocketsByYear = () => {
+        const counts = {};
+        launchesAll.results.forEach((launch) => {
+          const year = new Date(launch.date_utc).getFullYear().toString();
+          const rocketName = launch.rocket_data[0].name;
+          if (!counts[year]) {
+            counts[year] = {};
+          }
+          counts[year][rocketName] = (counts[year][rocketName] || 0) + 1;
+        });
+        setRocketsByYear(counts);
+      };
+
       countRocketNames();
       countSuccessFailures();
+      countRocketsByYear();
     }
   }, [launchesAll]);
 
@@ -47,15 +63,15 @@ const GraficoPizza = () => {
     fill: colors[index % colors.length],
   }));
 
-  const BarData = [
-    {
-      name: "2020",
-      "Falcon 1": 10,
-      "Falcon 9": 20,
-      "Falcon Heavy": 10,
-      "Starship": 20,
-    },
-  ];
+  // Preparar os dados para o gráfico de barras
+  const years = Object.keys(rocketsByYear);
+  const BarData = years.map((year) => {
+    const dataEntry = { name: year };
+    rocketNames.forEach((rocketName) => {
+      dataEntry[rocketName] = rocketsByYear[year][rocketName] || 0;
+    });
+    return dataEntry;
+  });
 
   return (
     <>
@@ -79,10 +95,9 @@ const GraficoPizza = () => {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="Falcon 1" fill="#8884d8" />
-              <Bar dataKey="Falcon 9" fill="#82ca9d" />
-              <Bar dataKey="Falcon Heavy" fill="#cd4569" />
-              <Bar dataKey="Starship" fill="#e37400" />
+                {rocketNames.map((rocketName, index) => (
+                  <Bar key={index} dataKey={rocketName} fill={colors[index % colors.length]} />
+                ))}
             </BarChart>
           </div>
         </div>

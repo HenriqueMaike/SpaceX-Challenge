@@ -9,6 +9,7 @@ function Home() {
     const { launches } = useContext(ContextApi);
     const [launchesData, setLaunchesData] = useState([]);
 
+    //useEffect que faz a requisição dos dados nos estado em que se encntra no context
     useEffect(() => {
         if (launches.results) {
             setLaunchesData(launches.results);

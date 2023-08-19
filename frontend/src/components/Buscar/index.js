@@ -6,7 +6,6 @@ import styles from './styles.module.scss'
 
 function Buscar() {
     const { LaunchesRequest } = useContext(ContextApi);
-
     const { launches } = useContext(ContextApi);
 
     const [search, setSearch] = useState('');
@@ -14,8 +13,10 @@ function Buscar() {
     const page = 1;
     const limit = launches.limit;
 
+    // Aplicar debounce a LaunchesRequest com um atraso de 300 milissegundos
     const debouncedSearch = debounce(LaunchesRequest, 300);
 
+    //UseEffect para chamar a função LaunchesRequest que passa pelo debounce coms os params de busca
     useEffect(() => {
         debouncedSearch(page, search, limit);
     }, [page, search, limit]);

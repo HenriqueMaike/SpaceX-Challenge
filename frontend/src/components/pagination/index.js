@@ -12,6 +12,8 @@ function Pagination() {
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
 
+
+  //Funções de paginação
   const handlePrevChange = () => {
     if (currentPage > 1) {
       const page = currentPage - 1;
@@ -28,6 +30,7 @@ function Pagination() {
     }
   };
 
+  //UseEffect para controlar a paginação 
   useEffect(() => {
     setCurrentPage(launches.page);
     setTotalPages(launches.totalPages);
