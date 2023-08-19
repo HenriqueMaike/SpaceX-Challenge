@@ -3,12 +3,11 @@ import { ContextApi } from '../../context/ContextApi';
 import styles from './style.module.scss'
 import Pagination from '../../components/pagination';
 import Buscar from '../../components/Buscar';
+import GraficoPizza from '../../components/Graficos';
 
 function Home() {
     const { launches } = useContext(ContextApi);
     const [launchesData, setLaunchesData] = useState([]);
-
-    console.log(launches)
 
     useEffect(() => {
         if (launches.results) {
@@ -18,6 +17,9 @@ function Home() {
 
     return (
         <div className={styles.container}>
+            
+                <GraficoPizza/>
+                
                 <h3>Busca registro de lançamento</h3>
                 <Buscar/>
             <div className={styles.listaLaunches}>  

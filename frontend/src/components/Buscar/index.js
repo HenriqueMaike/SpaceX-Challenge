@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ContextApi } from "../../context/ContextApi";
+import debounce from 'lodash/debounce';
 
 import styles from './styles.module.scss'
 
@@ -13,8 +14,10 @@ function Buscar() {
     const page = 1;
     const limit = launches.limit;
 
+    const debouncedSearch = debounce(LaunchesRequest, 300);
+
     useEffect(() => {
-        LaunchesRequest(page, search, limit);
+        debouncedSearch(page, search, limit);
     }, [page, search, limit]);
 
     return (
