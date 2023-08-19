@@ -1,5 +1,63 @@
 # Fullstack Challenge 🏅 Space X API
 
+## Tecnologias utilizadas
+
+Frontend
+- ReactJS
+- JavaScript
+
+Backend 
+- NodeJS
+- TypeScript
+- ORM Primsa
+- Postgres
+
+# Informações para utilização
+## frontend 
+```json
+{
+    npm install - para instalar as dependencia 
+}
+```
+
+```json
+{
+    yarn start - para iniciar 
+}
+```
+## backend 
+```json
+{
+    npm install - para instalar as dependencia 
+}
+```
+caso queira criar outro banco de dados, altere o arquivo .env com os dados de seu banco de acordo com a documentação do PRISMA
+https://www.prisma.io/docs/concepts/database-connectors/postgresql
+
+### O projeto ja esta conectado a um bando externo no RENDER.COM e a tabelas estão criadas, mas caso queira utilizar localmente utilize prisma migrate para criar as tabelas.
+
+```json
+{
+   yarn prisma migrate dev --name render
+}
+```
+
+para executar o projeto utilize:
+
+```json
+{
+   yarn dev
+}
+```
+
+### Ambos foram criado arquivo DOCKERFILE para criação de uma imagem
+
+![space](https://github.com/HenriqueMaike/SpaceX-Challenge/assets/50559406/47a56961-c019-46c0-a4f5-05a06e102510)
+
+
+
+# Fullstack Challenge 🏅 Space X API
+
 Este é um desafio para podermos ver suas habilidades como Fullstack Developer.
 Nesse desafio você deverá desenvolver um aplicativo para listar informações da API SpaceX-API.
 
