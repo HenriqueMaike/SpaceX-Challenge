@@ -31,6 +31,12 @@ Backend
     npm install - para instalar as dependencia 
 }
 ```
+
+```json
+{
+    npx prisma generate - para gerar o código do Prisma Client
+}
+```
 caso queira criar outro banco de dados, altere o arquivo .env com os dados de seu banco de acordo com a documentação do PRISMA
 https://www.prisma.io/docs/concepts/database-connectors/postgresql
 
@@ -52,9 +58,20 @@ para executar o projeto utilize:
 
 ### Ambos foram criado arquivo DOCKERFILE para criação de uma imagem
 
+Para rodar o container do backend após o docker image buil
+```json
+{
+   docker container run -d -p 3333:3333 node:spacex-1.0
+}
+```
+Para rodar o container do front após o docker image buil
+```json
+{
+   docker container run -d -p 3000:3000 react:spacex-1.0
+}
+```
+
 ![space](https://github.com/HenriqueMaike/SpaceX-Challenge/assets/50559406/47a56961-c019-46c0-a4f5-05a06e102510)
-
-
 
 # Fullstack Challenge 🏅 Space X API
 
