@@ -1,20 +1,9 @@
-# Use uma imagem Node.js como base
-FROM node:20-alpine as build
+FROM alpine:latest
+
+RUN apk add --update nodejs npm
 
 WORKDIR /app
 
-COPY package*.json ./
-
-RUN npm install
-
 COPY . .
 
-RUN npm run build
-
-FROM nginx:alpine3.18
-
-COPY --from=build /app/build /usr/share/nginx/html
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "start"]

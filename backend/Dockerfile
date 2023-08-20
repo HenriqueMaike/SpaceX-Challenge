@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3333
+
+RUN npx prisma generate
 
 CMD ["yarn", "dev"]
