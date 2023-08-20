@@ -36,7 +36,7 @@ async function LaunchesRequest(page, search, limit) {
 }
 
 // Aplicar debounce a LaunchesRequest com um atraso de 300 milissegundos
-const debouncedLaunchesRequest = debounce(LaunchesRequest, 3000);
+const debouncedLaunchesRequest = debounce(LaunchesRequest, 300);
 
   //função utilizada para obter dados para os graficos, este obtem todos os objetos em results 
   async function LaunchesAllRequest(page, search, limit) {
